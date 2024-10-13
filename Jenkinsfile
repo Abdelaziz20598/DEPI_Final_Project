@@ -1,50 +1,86 @@
-// pipeline to build the terraform infrastucture on AWS..
+// pipeline to build the terraform infrastucture on both AWS and EKS..
 
 pipeline {
-
-    agent any    
+    agent any
 
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = "us-east-1"
+        ECR_REPOSITORY = "1410-8352-5350.dkr.ecr.us-east-1.amazonaws.com/flask-app"
+        GIT_REPO_URL = "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"
     }
     
     stages {
         stage('Checkout Code') {
             steps {
                 // Clone the GitHub repository
-                git branch: 'main',
-                url: 'https://github.com/TOKA-FARID/ITI_Project'
+                git branch: 'main', url: "${GIT_REPO_URL}"
             }
         }
 
-        stage('initialize Terraform') {
+        stage('Initialize Terraform') {
             steps {
                 dir('./terraform') {
                     script {
                         sh 'terraform init'
+                        sh 'terraform plan | tee terraform-plan.log'
+                        sh 'terraform apply -auto-approve | tee terraform-apply.log'
                     }
                 }
             }
         }
-        stage('Apply Terraform') {
+
+        stage('Build Docker Image') {
             steps {
-                dir('./terraform') {
+                dir('./ITI_Project/App') {
                     script {
-                        echo "Applying Terraform ...."
-                        sh 'terraform apply -auto-approve'
+                        sh 'docker build -t my-app .'
+                        sh "docker tag my-app ${ECR_REPOSITORY}:latest"
                     }
                 }
             }
         }
 
-    }
-
-        post {
-            success {
-                build job: 'AWS-Deploy-App', propagate: false
+        stage('Configure Docker Registry') {
+            steps {
+                script {
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY}"
+                }
             }
         }
 
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh "docker push ${ECR_REPOSITORY}:latest"
+                }
+            }
+        }
+
+        stage('Deploy to EKS') {
+            steps {
+                script {
+                    // Update kubeconfig for EKS
+                    sh 'aws eks --region ${AWS_DEFAULT_REGION} update-kubeconfig --name eks'
+                    
+                    // Deploy to Kubernetes
+                    sh "kubectl apply -f ./ITI_Project/Kubernetes/app-deployment.yaml"
+                    sh "kubectl apply -f ./ITI_Project/Kubernetes/app-service.yaml"
+                    
+                    // Check deployed resources
+                    sh 'kubectl get all'
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Check the logs for details."
+        }
+    }
 }
