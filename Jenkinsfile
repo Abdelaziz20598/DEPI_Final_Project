@@ -33,7 +33,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dir('./ITI_Project/App') {
+                dir('./DEPI_Final_Project/App') {
                     script {
                         sh 'docker build -t my-app .'
                         sh "docker tag my-app ${ECR_REPOSITORY}:latest"
@@ -65,8 +65,8 @@ pipeline {
                     sh 'aws eks --region ${AWS_DEFAULT_REGION} update-kubeconfig --name eks'
                     
                     // Deploy to Kubernetes
-                    sh "kubectl apply -f ./ITI_Project/Kubernetes/app-deployment.yaml"
-                    sh "kubectl apply -f ./ITI_Project/Kubernetes/app-service.yaml"
+                    sh "kubectl apply -f ./DEPI_Final_Project/Kubernetes/app-deployment.yaml"
+                    sh "kubectl apply -f ./DEPI_Final_Project/Kubernetes/app-service.yaml"
                     
                     // Check deployed resources
                     sh 'kubectl get all'
