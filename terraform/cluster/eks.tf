@@ -39,7 +39,7 @@ resource "aws_iam_role_policy_attachment" "amazon_eks_cluster_policy" {
 # Resource: aws_eks_cluster
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
 
-resource "aws_eks_cluster" "eks" {
+resource "aws_eks_cluster" "eks" {#needs to be changed
   # Name of the cluster.
   name = "eks"
 
@@ -48,7 +48,7 @@ resource "aws_eks_cluster" "eks" {
   role_arn = aws_iam_role.eks_cluster.arn
 
   # Desired Kubernetes master version
-  version = "1.24"
+  version = "1.24" #needs to be checked 1.34.0
 
   vpc_config {
     # Indicates whether or not the Amazon EKS private API server endpoint is enabled
@@ -58,7 +58,7 @@ resource "aws_eks_cluster" "eks" {
     endpoint_public_access = true
 
     # Must be in at least two different availability zones
-    subnet_ids = [
+    subnet_ids = [ #needs to be changed
       var.public_us_east_1a_id,
       var.public_us_east_1b_id,
       var.private_us_east_1a_id,

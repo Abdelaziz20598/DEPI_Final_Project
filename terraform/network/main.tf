@@ -24,7 +24,7 @@ resource "aws_internet_gateway" "igw_main" {
 
 resource "aws_subnet" "private_us_east_1a" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = "10.0.2.0/24" #need checked. Ensure this does not overlap 
   availability_zone = "us-east-1a"
 
   tags = {

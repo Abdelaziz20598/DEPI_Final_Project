@@ -58,7 +58,7 @@ resource "aws_iam_role_policy_attachment" "amazon_ec2_container_registry_read_on
 
 resource "aws_eks_node_group" "nodes_general" {
   # Name of the EKS Cluster.
-  cluster_name = aws_eks_cluster.eks.name
+  cluster_name = aws_eks_cluster.eks.name #needs to be adjusted changed
 
   # Name of the EKS Node Group.
   node_group_name = "nodes-general"
@@ -69,7 +69,7 @@ resource "aws_eks_node_group" "nodes_general" {
   # Identifiers of EC2 Subnets to associate with the EKS Node Group. 
   # These subnets must have the following resource tag: kubernetes.io/cluster/CLUSTER_NAME 
   # (where CLUSTER_NAME is replaced with the name of the EKS Cluster).
-  subnet_ids = [
+  subnet_ids = [ #The subnet_ids must refer to your specific private subnets in AWS, needs to be adjusted changed
     var.private_us_east_1a_id,
     var.private_us_east_1b_id
   ]
@@ -101,14 +101,14 @@ resource "aws_eks_node_group" "nodes_general" {
   force_update_version = false
 
   # List of instance types associated with the EKS Node Group
-  instance_types = ["t3.small"]
+  instance_types = ["t3.small"] #check it needs to be changed adjusted
 
   labels = {
     role = "nodes-general"
   }
 
   # Kubernetes version
-  version = "1.24"
+  version = "1.24" #need to be chaecked to 1.34.0
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
