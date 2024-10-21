@@ -4,11 +4,13 @@ pipeline {
     agent any
 
     environment {//needs to be changed
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_ACCESS_KEY_ID = credentials('aws_cred')
+        //AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = "us-east-1"
         //ECR_REPOSITORY = "1410-8352-5350.dkr.ecr.us-east-1.amazonaws.com/flask-app"
+        DOCKER_CREDS = credentials('dockerhub')
         DOCKER_REPO = "abdelaziz20598/depi-flask:last"
+        //GIT_CREDS = credentials('github')
         GIT_REPO_URL = "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"
     }
     
@@ -31,7 +33,14 @@ pipeline {
                 }
             }
         }
-
+        stage('Login to Docker Hub') { 
+            steps { 
+                script { 
+                // Using the credentials to login to Docker Hub 
+                sh 'echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin' 
+                } 
+            } 
+        }
         stage('Build Docker Image') {
             steps {
                 dir('./DEPI_Final_Project/App') {
@@ -63,6 +72,7 @@ pipeline {
             }
         }
 */
+        
         stage('Deploy to EKS') {
             steps {
                 script {
