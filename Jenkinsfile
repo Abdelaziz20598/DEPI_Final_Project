@@ -11,7 +11,7 @@ pipeline {
         //DOCKER_CREDS = credentials('dockerhub')
         DOCKER_CREDS_USR = credentials('dockerhub').USR
         DOCKER_CREDS_PSW = credentials('dockerhub').PSW
-        DOCKER_REPO = "abdelaziz20598/depi-flask:last"
+        DOCKER_REPO = "abdelaziz20598/"
         //GIT_CREDS = credentials('github')
         GIT_REPO_URL = "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"
     }
@@ -47,10 +47,10 @@ pipeline {
             steps {
                 dir('./DEPI_Final_Project/App') {
                     script {
-                        sh 'docker build -t my-app .'
+                        sh 'docker build -t ${DOCKER_REPO}/my-app .'
                         //sh "docker tag my-app ${ECR_REPOSITORY}:latest"
-                        sh "docker tag my-app ${DOCKER_REPO}:latest"
-                        sh "docker push ${DOCKER_REPO}:latest"
+                        //sh "docker tag my-app ${DOCKER_REPO}"
+                        sh "docker push ${DOCKER_REPO}/my-app"
                         
                     }
                 }
