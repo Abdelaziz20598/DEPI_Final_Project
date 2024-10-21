@@ -7,7 +7,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = "us-east-1"
-        ECR_REPOSITORY = "1410-8352-5350.dkr.ecr.us-east-1.amazonaws.com/flask-app"
+        //ECR_REPOSITORY = "1410-8352-5350.dkr.ecr.us-east-1.amazonaws.com/flask-app"
+        DOCKER_REPO = "abdelaziz20598/depi-flask:last"
         GIT_REPO_URL = "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"
     }
     
@@ -36,12 +37,15 @@ pipeline {
                 dir('./DEPI_Final_Project/App') {
                     script {
                         sh 'docker build -t my-app .'
-                        sh "docker tag my-app ${ECR_REPOSITORY}:latest"
+                        //sh "docker tag my-app ${ECR_REPOSITORY}:latest"
+                        sh "docker tag my-app ${DOCKER_REPO}:latest"
+                        sh "docker push ${DOCKER_REPO}:latest"
+                        
                     }
                 }
             }
         }
-
+/*
         stage('Configure Docker Registry') {
             steps {
                 script {
@@ -49,7 +53,8 @@ pipeline {
                 }
             }
         }
-
+*/
+        /*
         stage('Push Docker Image') {
             steps {
                 script {
@@ -57,7 +62,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Deploy to EKS') {
             steps {
                 script {
@@ -74,7 +79,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         success {
             echo "Pipeline completed successfully!"
