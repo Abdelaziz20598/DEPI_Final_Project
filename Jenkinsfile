@@ -13,7 +13,7 @@ pipeline {
         //DOCKER_CREDS_PSW = credentials('dockerhub').PSW
         DOCKER_REPO = "abdelaziz20598/"
         //GIT_CREDS = credentials('github')
-        GIT_REPO_URL = "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"
+        GIT_REPO_URL = "https://github.com/Abdelaziz20598/DEPI_Final_Project"
     }
     
     stages {
