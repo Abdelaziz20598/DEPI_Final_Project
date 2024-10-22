@@ -20,7 +20,8 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Clone the GitHub repository
-                git branch: 'master', url: "${GIT_REPO_URL}"
+                //git branch: 'master', url: "${GIT_REPO_URL}"
+                sh 'git clone "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"'
             }
         }
 
