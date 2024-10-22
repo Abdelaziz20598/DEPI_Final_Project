@@ -35,15 +35,16 @@ pipeline {
                 }
             }
         }
-        stages {
-            stage('Docker Login') {
-                steps {
-                    script {
-                        withCredentials([usernamePassword(credentialsId: 'dockerhub', 
-                            usernameVariable: 'DOCKER_USERNAME', 
-                            passwordVariable: 'DOCKER_PASSWORD')]) {
-                            // Log into Docker Hub
-                            sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+
+        
+        stage('Docker Login') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', 
+                        usernameVariable: 'DOCKER_USERNAME', 
+                        passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Log into Docker Hub
+                        sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                     }
                 }
             }
