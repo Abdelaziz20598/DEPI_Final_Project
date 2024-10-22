@@ -24,6 +24,18 @@ pipeline {
                 sh 'git clone "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"'
             }
         }
+        
+        stage('Initialize Terraform') {
+            steps {
+                dir('./terraform') {
+                    script {
+                        sh 'terraform init'
+                        sh 'terraform plan | tee terraform-plan.log'
+                        sh 'terraform apply -auto-approve | tee terraform-apply.log'
+                    }
+                }
+            }
+        }
 
         stage('Docker Login') {
             steps {
@@ -52,17 +64,6 @@ pipeline {
             }
         }
 
-        stage('Initialize Terraform') {
-            steps {
-                dir('./terraform') {
-                    script {
-                        sh 'terraform init'
-                        sh 'terraform plan | tee terraform-plan.log'
-                        sh 'terraform apply -auto-approve | tee terraform-apply.log'
-                    }
-                }
-            }
-        }
         stage('Deploy to EKS') {
             steps {
                 script {
