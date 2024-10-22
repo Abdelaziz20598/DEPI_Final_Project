@@ -6,7 +6,7 @@ pipeline {
     environment {//needs to be changed
         //AWS_ACCESS_KEY_ID = credentials('aws_cred')
         //AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        //AWS_DEFAULT_REGION = "us-east-1"
+        AWS_DEFAULT_REGION = "us-east-1"
         //ECR_REPOSITORY = "1410-8352-5350.dkr.ecr.us-east-1.amazonaws.com/flask-app"
         //DOCKER_CREDS = credentials('dockerhub')
         //DOCKER_CREDS_USR = credentials('dockerhub').USR
