@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                dir('./DEPI_Final_Project/App') {
+                dir('./DEPI_Final_Project/App/') {
                     script {
                         sh 'docker build -t ${DOCKER_REPO}my-app .'
                         //sh "docker tag my-app ${ECR_REPOSITORY}:latest"
