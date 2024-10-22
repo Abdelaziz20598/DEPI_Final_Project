@@ -40,6 +40,7 @@ pipeline {
             steps {
                 dir('./DEPI_Final_Project/App/') {
                     script {
+                        sh 'pwd'
                         sh 'docker build -t ${DOCKER_REPO}my-app .'
                         //sh "docker tag my-app ${ECR_REPOSITORY}:latest"
                         //sh "docker tag my-app ${DOCKER_REPO}"
