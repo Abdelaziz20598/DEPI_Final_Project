@@ -4,13 +4,13 @@ pipeline {
     agent any
 
     environment {//needs to be changed
-        AWS_ACCESS_KEY_ID = credentials('aws_cred')
+        //AWS_ACCESS_KEY_ID = credentials('aws_cred')
         //AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        AWS_DEFAULT_REGION = "us-east-1"
+        //AWS_DEFAULT_REGION = "us-east-1"
         //ECR_REPOSITORY = "1410-8352-5350.dkr.ecr.us-east-1.amazonaws.com/flask-app"
         //DOCKER_CREDS = credentials('dockerhub')
-        DOCKER_CREDS_USR = credentials('dockerhub').USR
-        DOCKER_CREDS_PSW = credentials('dockerhub').PSW
+        //DOCKER_CREDS_USR = credentials('dockerhub').USR
+        //DOCKER_CREDS_PSW = credentials('dockerhub').PSW
         DOCKER_REPO = "abdelaziz20598/"
         //GIT_CREDS = credentials('github')
         GIT_REPO_URL = "https://github.com/Abdelaziz20598/DEPI_Final_Project.git"
@@ -35,13 +35,18 @@ pipeline {
                 }
             }
         }
-        stage('Login to Docker Hub') { 
-            steps { 
-                script { 
-                // Using the credentials to login to Docker Hub 
-                sh 'docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW'
-                } 
-            } 
+        stages {
+            stage('Docker Login') {
+                steps {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub', 
+                            usernameVariable: 'DOCKER_USERNAME', 
+                            passwordVariable: 'DOCKER_PASSWORD')]) {
+                            // Log into Docker Hub
+                            sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    }
+                }
+            }
         }
         stage('Build Docker Image') {
             steps {
