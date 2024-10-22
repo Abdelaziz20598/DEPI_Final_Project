@@ -24,19 +24,6 @@ pipeline {
             }
         }
 
-        stage('Initialize Terraform') {
-            steps {
-                dir('./terraform') {
-                    script {
-                        sh 'terraform init'
-                        sh 'terraform plan | tee terraform-plan.log'
-                        sh 'terraform apply -auto-approve | tee terraform-apply.log'
-                    }
-                }
-            }
-        }
-
-        
         stage('Docker Login') {
             steps {
                 script {
@@ -62,25 +49,18 @@ pipeline {
                 }
             }
         }
-/*
-        stage('Configure Docker Registry') {
+
+        stage('Initialize Terraform') {
             steps {
-                script {
-                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY}"
+                dir('./terraform') {
+                    script {
+                        sh 'terraform init'
+                        sh 'terraform plan | tee terraform-plan.log'
+                        sh 'terraform apply -auto-approve | tee terraform-apply.log'
+                    }
                 }
             }
         }
-*/
-        /*
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    sh "docker push ${ECR_REPOSITORY}:latest"
-                }
-            }
-        }
-*/
-        
         stage('Deploy to EKS') {
             steps {
                 script {
