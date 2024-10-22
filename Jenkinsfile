@@ -53,10 +53,10 @@ pipeline {
             steps {
                 dir('./DEPI_Final_Project/App') {
                     script {
-                        sh 'docker build -t ${DOCKER_REPO}/my-app .'
+                        sh 'docker build -t ${DOCKER_REPO}my-app .'
                         //sh "docker tag my-app ${ECR_REPOSITORY}:latest"
                         //sh "docker tag my-app ${DOCKER_REPO}"
-                        sh "docker push ${DOCKER_REPO}/my-app"
+                        sh "docker push ${DOCKER_REPO}my-app"
                         
                     }
                 }
